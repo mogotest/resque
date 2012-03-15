@@ -29,7 +29,7 @@ module Resque
     host, port, db = server.split(':')
     namespace ||= :resque
 
-    @redis = ConnectionPool.new(:size => (ENV['REDIS_CONNECTIONS'] || 3).to_i) do
+    @redis = ConnectionPool::Wrapper.new(:size => (ENV['REDIS_CONNECTIONS'] || 3).to_i) do
       redis = Redis.new(:host => host, :port => port, :db => db)
       Redis::Namespace.new(namespace, :redis => redis)
     end
@@ -39,7 +39,7 @@ module Resque
   # create a new one.
   def redis
     return @redis if @redis
-    self.redis = Redis.respond_to?(:connect) ? Redis.connect : "localhost:6379"
+    self.redis = R"localhost:6379"
     self.redis
   end
 
